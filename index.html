@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobbsøkerhjelpen - Din assistent i jobbsøkingen</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="main-header">
+            <div class="logo">Jobbsøkerhjelpen</div>
+            <nav class="main-nav">
+                <button class="nav-btn active" data-tab="job-ad">Stillingsannonse</button>
+                <button class="nav-btn" data-tab="cv">CV & Profil</button>
+                <button class="nav-btn" data-tab="application">Søknad</button>
+            </nav>
+        </header>
+
+        <main class="content-area">
+            <!-- Section 1: Stillingsannonse -->
+            <section id="job-ad" class="tab-content active">
+                <div class="card">
+                    <h2>1. Stillingsannonse</h2>
+                    <p class="description">Lim inn teksten fra stillingsannonsen her. Vi analyserer den for å finne
+                        nøkkelord.</p>
+                    <textarea id="job-description-input" placeholder="Lim inn stillingsannonse her..."></textarea>
+                    <div class="actions">
+                        <button id="analyze-btn" class="primary-btn">Analyser Annonse</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: CV -->
+            <section id="cv" class="tab-content">
+                <div class="card">
+                    <h2>2. Din Profil & CV</h2>
+                    <p class="description">Bygg din profil for å matche drømmejobben!</p>
+
+                    <!-- Profile Strength Meter -->
+                    <div class="profile-strength-container">
+                        <div class="strength-header">
+                            <span>Profilstyrke</span>
+                            <span id="strength-text">Startet</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div id="strength-bar" class="progress-bar" style="width: 5%;"></div>
+                        </div>
+                        <p id="motivational-message" class="motivational-message">Legg til ferdigheter for å øke
+                            sjansene dine!</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cv-skills-input">Nøkkelferdigheter</label>
+                        <div class="skills-container" id="skills-container">
+                            <!-- Tags will appear here -->
+                            <input type="text" id="cv-skills-input"
+                                placeholder="Skriv ferdighet og trykk Enter (f.eks. Java, Salg)...">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cv-text">CV Tekst / Erfaring</label>
+                        <textarea id="cv-text"
+                            placeholder="Lim inn CV-tekst eller beskriv din erfaring her..."></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Søknad -->
+            <section id="application" class="tab-content">
+                <div class="split-view">
+                    <div class="editor-pane">
+                        <div class="card">
+                            <h2>3. Skriv Søknad</h2>
+                            <p class="description">Skriv søknaden din her. Bruk analysen til høyre for hjelp.</p>
+                            <textarea id="application-text" placeholder="Hei, jeg viser til stilling som..."></textarea>
+                        </div>
+                    </div>
+                    <div class="analysis-pane">
+                        <div class="card analysis-card">
+                            <h3>Analyse & Tips</h3>
+                            <div id="analysis-results">
+                                <p class="placeholder-text">Kjør analyse i første fane for å se resultater her.</p>
+                            </div>
+
+                            <div class="match-score-container" style="display: none;">
+                                <h4>Match Score</h4>
+                                <div class="score-circle">
+                                    <span id="score-value">0%</span>
+                                </div>
+                            </div>
+
+                            <div class="keywords-container" style="display: none;">
+                                <h4>Viktige nøkkelord funnet:</h4>
+                                <ul id="found-keywords-list" class="keyword-list"></ul>
+
+                                <h4>Du mangler kanskje:</h4>
+                                <ul id="missing-keywords-list" class="keyword-list missing"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
