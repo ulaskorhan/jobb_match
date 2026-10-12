@@ -1,22 +1,29 @@
+/* ============================================================
+   jobbmatch – stylesheet
+   Colours are defined once here as variables and reused below.
+   ============================================================ */
 :root {
-    --primary-color: #0f172a;
-    /* Slate 900 */
-    --accent-color: #3b82f6;
-    /* Blue 500 */
-    --accent-hover: #2563eb;
-    /* Blue 600 */
-    --bg-color: #f8fafc;
-    /* Slate 50 */
+    --ink: #0b1220;            /* headings, active tab */
+    --text-main: #1f2937;      /* body text */
+    --text-muted: #6b7280;     /* descriptions, hints */
+    --bg-color: #f4f6f8;       /* page background */
     --card-bg: #ffffff;
-    --text-main: #334155;
-    /* Slate 700 */
-    --text-muted: #64748b;
-    /* Slate 500 */
-    --border-color: #e2e8f0;
-    /* Slate 200 */
-    --success-color: #22c55e;
-    --warning-color: #f59e0b;
-    --font-family: 'Inter', sans-serif;
+    --panel-bg: #f8fafb;       /* analysis panel, strength box */
+    --border-color: #e5e8ec;
+
+    --accent-color: #0e9384;   /* teal: buttons, score, focus */
+    --accent-hover: #0b7a6e;
+    --accent-soft: #e7f5f3;    /* light teal backgrounds */
+    --accent-ring: rgba(14, 147, 132, 0.18);
+
+    --missing-bg: #fff1f2;
+    --missing-text: #be123c;
+    --missing-border: #fecdd3;
+
+    --radius-lg: 16px;
+    --radius-md: 10px;
+    --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 4px 16px rgba(16, 24, 40, 0.06);
+    --font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
 * {
@@ -30,68 +37,78 @@ body {
     background-color: var(--bg-color);
     color: var(--text-main);
     line-height: 1.6;
-    height: 100vh;
-    overflow: hidden;
-    /* Prevent full page scroll, handle in content */
+    -webkit-font-smoothing: antialiased;
 }
 
 .app-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    background-color: var(--bg-color);
+    min-height: 100vh;
 }
 
-/* Header */
+/* ---------- Header ---------- */
 .main-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
     padding: 1rem 2rem;
-    background-color: var(--card-bg);
+    background-color: rgba(244, 246, 248, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border-color);
 }
 
 .logo {
     font-weight: 700;
-    font-size: 1.25rem;
-    color: var(--primary-color);
+    font-size: 1.35rem;
+    letter-spacing: -0.03em;
+    color: var(--ink);
 }
 
+.logo span {
+    color: var(--accent-color);
+}
+
+/* Tabs look like one segmented control */
 .main-nav {
     display: flex;
-    gap: 1rem;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
 }
 
 .nav-btn {
     background: none;
     border: none;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.1rem;
     font-family: var(--font-family);
+    font-size: 0.9rem;
     font-weight: 500;
     color: var(--text-muted);
     cursor: pointer;
-    border-radius: 0.5rem;
-    transition: all 0.2s;
+    border-radius: 999px;
+    white-space: nowrap;
+    transition: color 0.2s, background-color 0.2s;
 }
 
 .nav-btn:hover {
-    color: var(--primary-color);
-    background-color: var(--bg-color);
+    color: var(--ink);
 }
 
 .nav-btn.active {
-    color: var(--card-bg);
-    background-color: var(--primary-color);
+    color: #ffffff;
+    background-color: var(--ink);
 }
 
-/* Main Content */
+/* ---------- Main content ---------- */
 .content-area {
-    flex: 1;
     padding: 2rem;
-    overflow-y: auto;
 }
 
 .tab-content {
@@ -104,43 +121,40 @@ body {
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(5px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Cards */
+/* ---------- Cards ---------- */
 .card {
     background-color: var(--card-bg);
-    border-radius: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
     padding: 2rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow);
 }
 
 h2 {
     font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-    color: var(--primary-color);
+    letter-spacing: -0.02em;
+    margin-bottom: 0.35rem;
+    color: var(--ink);
 }
 
 h3 {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
     margin-bottom: 1rem;
-    color: var(--primary-color);
+    color: var(--ink);
 }
 
 h4 {
-    font-size: 1rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
-    color: var(--text-main);
+    margin-bottom: 0.75rem;
+    color: var(--text-muted);
     font-weight: 600;
 }
 
@@ -149,205 +163,221 @@ h4 {
     margin-bottom: 1.5rem;
 }
 
-/* Inputs */
+/* ---------- Inputs ---------- */
 textarea {
     width: 100%;
     min-height: 300px;
     padding: 1rem;
     border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
+    border-radius: var(--radius-md);
+    background-color: var(--card-bg);
+    color: var(--text-main);
     font-family: var(--font-family);
-    font-size: 1rem;
+    font-size: 1rem;  /* 16px stops iPhones from zooming in on focus */
+    line-height: 1.6;
     resize: vertical;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+textarea::placeholder,
+input::placeholder {
+    color: #9ca3af;
 }
 
 textarea:focus {
     outline: none;
     border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 4px var(--accent-ring);
 }
 
 .form-group {
     margin-bottom: 1.5rem;
 }
 
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: var(--text-main);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--ink);
 }
 
-.form-group input {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
-    font-family: var(--font-family);
-    font-size: 1rem;
-}
-
-/* Buttons */
+/* ---------- Buttons ---------- */
 .primary-btn {
     background-color: var(--accent-color);
-    color: white;
+    color: #ffffff;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
+    padding: 0.8rem 1.6rem;
+    border-radius: 999px;
+    font-family: var(--font-family);
+    font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.1s;
 }
 
 .primary-btn:hover {
     background-color: var(--accent-hover);
 }
 
+.primary-btn:active {
+    transform: scale(0.98);
+}
+
+.primary-btn:focus-visible,
+.nav-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px var(--accent-ring);
+}
+
 .actions {
-    margin-top: 1rem;
+    margin-top: 1.25rem;
     display: flex;
     justify-content: flex-end;
 }
 
-/* Split View for Application */
+/* ---------- Søknad: editor + analysis side by side ---------- */
 .split-view {
-    display: flex;
-    gap: 2rem;
-    height: calc(100vh - 140px);
-    /* Approximate height calculation */
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
 }
 
-.editor-pane {
-    flex: 2;
-    overflow-y: auto;
-}
-
-.analysis-pane {
-    flex: 1;
-    overflow-y: auto;
+#application-text {
+    min-height: 420px;
 }
 
 .analysis-card {
     position: sticky;
-    top: 0;
-    background-color: #f1f5f9;
-    /* Slightly darker than card-bg for contrast */
-    border: 1px solid var(--border-color);
+    top: 90px;  /* stays visible below the sticky header while scrolling */
+    background-color: var(--panel-bg);
 }
 
-/* Analysis Results */
+/* ---------- Analysis results ---------- */
 .score-circle {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     background: conic-gradient(var(--accent-color) 0%, #e2e8f0 0%);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 1rem auto;
+    margin: 0.5rem auto 0;
     position: relative;
 }
 
+/* Inner circle that turns the coloured disc into a ring */
 .score-circle::before {
     content: '';
     position: absolute;
-    width: 80px;
-    height: 80px;
-    background-color: #f1f5f9;
+    width: 100px;
+    height: 100px;
+    background-color: var(--panel-bg);
     border-radius: 50%;
 }
 
 .score-circle span {
     position: relative;
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 700;
-    color: var(--primary-color);
+    letter-spacing: -0.02em;
+    color: var(--ink);
+}
+
+.match-score-container h4 {
+    margin-top: 0;
 }
 
 .keyword-list {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.4rem;
 }
 
 .keyword-list li {
-    background-color: white;
+    background-color: var(--accent-soft);
+    color: var(--accent-hover);
     padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    font-size: 0.875rem;
-    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid #c6e8e3;
 }
 
 .keyword-list.missing li {
-    background-color: #fee2e2;
-    color: #991b1b;
-    border-color: #fecaca;
+    background-color: var(--missing-bg);
+    color: var(--missing-text);
+    border-color: var(--missing-border);
 }
 
 .placeholder-text {
     text-align: center;
     color: var(--text-muted);
-    font-style: italic;
     padding: 2rem 0;
 }
 
-/* --- New CV Section Styles --- */
-
-/* Profile Strength */
+/* ---------- CV tab: profile strength ---------- */
 .profile-strength-container {
     margin-bottom: 2rem;
-    background: #f8fafc;
-    padding: 1.5rem;
-    border-radius: 0.75rem;
+    background: var(--panel-bg);
+    padding: 1.25rem 1.5rem;
+    border-radius: var(--radius-md);
     border: 1px solid var(--border-color);
 }
 
 .strength-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
     font-weight: 600;
-    color: var(--primary-color);
+    font-size: 0.9rem;
+    color: var(--ink);
 }
 
 .progress-bar-bg {
     width: 100%;
-    height: 10px;
-    background-color: #e2e8f0;
-    border-radius: 5px;
+    height: 8px;
+    background-color: #e5e8ec;
+    border-radius: 999px;
     overflow: hidden;
 }
 
 .progress-bar {
     height: 100%;
-    background-color: var(--success-color);
-    transition: width 0.5s ease-out;
+    border-radius: 999px;
+    background-color: var(--accent-color);
+    transition: width 0.5s ease-out, background-color 0.3s;
 }
 
 .motivational-message {
-    margin-top: 0.5rem;
-    font-size: 0.875rem;
+    margin-top: 0.6rem;
+    font-size: 0.85rem;
     color: var(--text-muted);
 }
 
-/* Skill Tags */
+/* ---------- CV tab: skill tags ---------- */
 .skills-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.4rem;
     padding: 0.5rem;
     border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
-    background-color: white;
-    min-height: 50px;
+    border-radius: var(--radius-md);
+    background-color: var(--card-bg);
+    min-height: 52px;
     align-items: center;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .skills-container:focus-within {
     border-color: var(--accent-color);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 4px var(--accent-ring);
 }
 
 .skills-container input {
@@ -355,29 +385,33 @@ textarea:focus {
     outline: none;
     flex: 1;
     min-width: 150px;
-    padding: 0.25rem;
+    padding: 0.35rem;
+    font-family: var(--font-family);
+    font-size: 1rem;  /* 16px stops iPhones from zooming in on focus */
+    color: var(--text-main);
+    background: transparent;
 }
 
 .skill-tag {
-    background-color: #dbeafe;
-    /* Blue 100 */
-    color: #1e40af;
-    /* Blue 800 */
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    font-size: 0.875rem;
+    background-color: var(--accent-soft);
+    color: var(--accent-hover);
+    border: 1px solid #c6e8e3;
+    padding: 0.25rem 0.5rem 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
     animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .skill-tag .remove-tag {
     cursor: pointer;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 1rem;
     line-height: 1;
-    opacity: 0.6;
+    opacity: 0.55;
 }
 
 .skill-tag .remove-tag:hover {
@@ -385,13 +419,87 @@ textarea:focus {
 }
 
 @keyframes popIn {
-    from {
-        transform: scale(0.8);
-        opacity: 0;
+    from { transform: scale(0.8); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+/* ============================================================
+   Tablet: put the analysis panel under the editor
+   ============================================================ */
+@media (max-width: 900px) {
+    .split-view {
+        grid-template-columns: 1fr;
     }
 
-    to {
-        transform: scale(1);
-        opacity: 1;
+    /* Show the analysis first: it is what you came to this tab for */
+    .analysis-pane {
+        order: -1;
+    }
+
+    .analysis-card {
+        position: static;
+    }
+}
+
+/* ============================================================
+   Phone
+   ============================================================ */
+@media (max-width: 640px) {
+    .main-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+    }
+
+    .logo {
+        font-size: 1.2rem;
+    }
+
+    /* The three tabs share the full width */
+    .nav-btn {
+        flex: 1;
+        padding: 0.55rem 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .content-area {
+        padding: 1rem;
+    }
+
+    .card {
+        padding: 1.25rem;
+        border-radius: 14px;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+
+    .description {
+        margin-bottom: 1.25rem;
+    }
+
+    textarea {
+        min-height: 220px;
+    }
+
+    #application-text {
+        min-height: 300px;
+    }
+
+    /* Full-width button is easier to tap */
+    .primary-btn {
+        width: 100%;
+        padding: 0.9rem;
+    }
+
+    .profile-strength-container {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .skills-container input {
+        min-width: 120px;
     }
 }

@@ -1,10 +1,10 @@
-# Jobbsøkerhjelpen (jobb_match)
+# jobbmatch (jobb_match)
 
-A small web app that helps job seekers compare their CV with a job ad. Paste a job ad, add your skills and CV text, and the app shows which keywords from the ad your profile covers and which ones may be missing. The interface is in Norwegian.
+A small web app that helps job seekers compare their CV with a job ad. Paste a job ad, add your skills and CV text, and the app shows which keywords from the ad your profile covers and which ones may be missing. The interface is in Norwegian and works on both desktop and mobile.
 
 **Live demo:** https://ulaskorhan.github.io/jobb_match/
 
-![Screenshot of Jobbsøkerhjelpen](screenshot.png)
+![Screenshot of jobbmatch](screenshot.png)
 
 ## How it works
 1. **Stillingsannonse:** paste the job ad and click *Analyser Annonse*.

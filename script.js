@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
             tab.classList.add('active');
             const targetId = tab.getAttribute('data-tab');
             document.getElementById(targetId).classList.add('active');
+            // Start each tab at the top (matters on phones, where pages are long)
+            window.scrollTo(0, 0);
         });
     });
 
@@ -103,15 +105,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (score < 30) {
             strengthText.textContent = "Startet";
-            strengthBar.style.backgroundColor = "#ef4444"; // Red
+            strengthBar.style.backgroundColor = "#e5484d"; // Red
             motivationalMsg.textContent = "Kom igjen! Legg til flere ferdigheter.";
         } else if (score < 70) {
             strengthText.textContent = "På god vei";
-            strengthBar.style.backgroundColor = "#f59e0b"; // Orange
+            strengthBar.style.backgroundColor = "#f5a524"; // Orange
             motivationalMsg.textContent = "Dette ser bra ut! Har du husket alt?";
         } else {
             strengthText.textContent = "Sterk profil!";
-            strengthBar.style.backgroundColor = "#22c55e"; // Green
+            strengthBar.style.backgroundColor = "#0e9384"; // Teal (same as the accent colour)
             motivationalMsg.textContent = "Fantastisk! Du er klar til å søke.";
         }
     }
