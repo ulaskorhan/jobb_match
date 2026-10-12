@@ -42,13 +42,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function addSkill(skill) {
         skills.push(skill);
         renderSkills();
-        updateProfileStrength();
+        onCvChanged();
     }
 
     function removeSkill(skill) {
         skills = skills.filter(s => s !== skill);
         renderSkills();
-        updateProfileStrength();
+        onCvChanged();
     }
 
     function renderSkills() {
@@ -56,22 +56,35 @@ document.addEventListener('DOMContentLoaded', () => {
         const tags = skillsContainer.querySelectorAll('.skill-tag');
         tags.forEach(t => t.remove());
 
-        // Insert new tags before input
+        // Insert new tags before input.
+        // textContent (not innerHTML) so the skill is always shown as plain text.
         skills.forEach(skill => {
             const tag = document.createElement('div');
             tag.classList.add('skill-tag');
-            tag.innerHTML = `
-                ${skill}
-                <span class="remove-tag">&times;</span>
-            `;
-            tag.querySelector('.remove-tag').addEventListener('click', () => removeSkill(skill));
+            tag.textContent = skill;
+
+            const removeBtn = document.createElement('span');
+            removeBtn.classList.add('remove-tag');
+            removeBtn.textContent = '×';
+            removeBtn.addEventListener('click', () => removeSkill(skill));
+
+            tag.appendChild(removeBtn);
             skillsContainer.insertBefore(tag, skillsInput);
         });
     }
 
-    // Profile Strength Calculation
-    cvText.addEventListener('input', updateProfileStrength);
+    // Runs every time the CV text or the skills change
+    cvText.addEventListener('input', onCvChanged);
 
+    function onCvChanged() {
+        updateProfileStrength();
+        // If the user has already analysed a job ad, update the result right away
+        if (hasAnalysed) {
+            runAnalysis();
+        }
+    }
+
+    // Profile Strength Calculation
     function updateProfileStrength() {
         let score = 5; // Base score
 
@@ -117,44 +130,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const foundList = document.getElementById('found-keywords-list');
     const missingList = document.getElementById('missing-keywords-list');
 
-    analyzeBtn.addEventListener('click', performAnalysis);
+    // Becomes true after the first successful click on "Analyser Annonse"
+    let hasAnalysed = false;
 
-    function performAnalysis() {
-        const jobText = jobInput.value.toLowerCase();
-        const cvContent = cvText.value.toLowerCase();
-        const skillsContent = skills.join(' ').toLowerCase(); // Use the array of skills
-        const combinedCv = cvContent + ' ' + skillsContent;
-
-        if (jobText.length < 50) {
+    analyzeBtn.addEventListener('click', () => {
+        if (jobInput.value.length < 50) {
             alert('Vennligst lim inn en lengre stillingsannonse for å analysere.');
             return;
         }
 
-        const keywords = extractKeywords(jobText);
-        const matches = [];
-        const missing = [];
+        hasAnalysed = true;
+        runAnalysis();
+        document.querySelector('[data-tab="application"]').click();
+    });
 
-        keywords.forEach(kw => {
-            if (combinedCv.includes(kw)) {
-                matches.push(kw);
-            } else {
-                missing.push(kw);
-            }
-        });
+    function runAnalysis() {
+        const keywords = extractKeywords(jobInput.value);
+
+        // All words from the CV text and the skills, split the same way as the job ad.
+        // A Set lets us check "is this exact word in the CV?" quickly.
+        const cvWords = new Set(splitIntoWords(cvText.value + ' ' + skills.join(' ')));
+
+        // Whole-word match: "java" only matches the word "java", not "javascript"
+        const matches = keywords.filter(kw => cvWords.has(kw));
+        const missing = keywords.filter(kw => !cvWords.has(kw));
 
         const total = keywords.length;
-        const matchCount = matches.length;
-        const percentage = total === 0 ? 0 : Math.round((matchCount / total) * 100);
+        const percentage = total === 0 ? 0 : Math.round((matches.length / total) * 100);
 
         updateUI(percentage, matches, missing);
-        document.querySelector('[data-tab="application"]').click();
+    }
+
+    // Turns text into a list of lowercase words.
+    // Everything that is NOT a letter, a digit, "+" or "#" counts as a separator,
+    // so spaces, line breaks, tabs and punctuation all split words.
+    // \p{L} = any letter (including æ, ø, å, é), \p{N} = any digit.
+    // The "u" flag at the end is needed for \p{...} to work.
+    // filter removes empty strings that appear if the text starts or ends with a separator.
+    function splitIntoWords(text) {
+        return text
+            .toLowerCase()
+            .split(/[^\p{L}\p{N}+#]+/u)
+            .filter(word => word !== '');
     }
 
     function extractKeywords(text) {
         const stopWords = ['og', 'i', 'er', 'som', 'til', 'en', 'av', 'på', 'for', 'at', 'å', 'med', 'de', 'har', 'den', 'ikke', 'om', 'et', 'men', 'så', 'seg', 'vil', 'kan', 'ble', 'var', 'skal', 'vi', 'du', 'dette', 'eller', 'ved', 'fra', 'oss', 'dere', 'vår', 'vårt', 'våre', 'søker', 'etter', 'innen', 'både', 'være', 'ha', 'få', 'bli', 'under', 'over', 'mellom', 'mot', 'ut', 'inn', 'opp', 'ned', 'hvis', 'når', 'hvor', 'hvem', 'hva', 'hvilken', 'hvilke', 'slik', 'derfor', 'fordi', 'selv', 'sammen', 'bare', 'mange', 'alle', 'noen', 'ingen', 'flere', 'mest', 'minst', 'svært', 'ganske', 'veldig', 'mye', 'lite', 'god', 'bra', 'bedre', 'best', 'ny', 'nye', 'gammel', 'gamle', 'stor', 'store', 'liten', 'små', 'høy', 'høye', 'lav', 'lave', 'lang', 'lange', 'kort', 'korte', 'tung', 'tunge', 'lett', 'lette', 'sterk', 'sterke', 'svak', 'svake', 'hard', 'harde', 'myk', 'myke', 'varm', 'varme', 'kald', 'kalde', 'lys', 'lyse', 'mørk', 'mørke', 'farge', 'farger', 'form', 'former', 'tid', 'tider', 'sted', 'steder', 'sak', 'saker', 'ting', 'liv', 'verden', 'år', 'dag', 'dager', 'uke', 'uker', 'måned', 'måneder'];
 
-        const cleanText = text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "").replace(/\s{2,}/g, " ");
-        const words = cleanText.split(' ');
+        const words = splitIntoWords(text);
 
         const frequency = {};
         words.forEach(word => {
@@ -168,6 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateUI(score, matches, missing) {
+        // Hide the placeholder text and show the score and keyword lists
         analysisResults.style.display = 'none';
         matchScoreContainer.style.display = 'block';
         keywordsContainer.style.display = 'block';
@@ -175,8 +199,19 @@ document.addEventListener('DOMContentLoaded', () => {
         scoreValue.textContent = `${score}%`;
         scoreCircle.style.background = `conic-gradient(var(--accent-color) ${score}%, #e2e8f0 ${score}%)`;
 
-        foundList.innerHTML = matches.map(kw => `<li>${capitalize(kw)}</li>`).join('');
-        missingList.innerHTML = missing.map(kw => `<li>${capitalize(kw)}</li>`).join('');
+        fillList(foundList, matches);
+        fillList(missingList, missing);
+    }
+
+    // Empties a <ul> and adds one <li> per word, using textContent (not innerHTML)
+    // so words from the job ad are always shown as plain text.
+    function fillList(listElement, words) {
+        listElement.textContent = '';
+        words.forEach(word => {
+            const li = document.createElement('li');
+            li.textContent = capitalize(word);
+            listElement.appendChild(li);
+        });
     }
 
     function capitalize(str) {
