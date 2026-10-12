@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Fetch job ad from a link ---
     // Address of the Cloudflare Worker (see worker/worker.js).
     // While it is empty, the link box is hidden and only copy-paste is used.
-    const FETCH_API_URL = '';
+    const FETCH_API_URL = 'https://jobbmatch.ulaskorhan.workers.dev/';
 
     const urlSection = document.getElementById('url-fetch');
     const urlInput = document.getElementById('job-url-input');

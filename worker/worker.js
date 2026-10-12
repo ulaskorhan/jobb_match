@@ -105,12 +105,35 @@ export function extractJobAd(html) {
         }
     }
 
+    // No JobPosting block: use the visible text and remove known page clutter
     const titleMatch = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i) || html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
     const mainMatch = html.match(/<main[^>]*>([\s\S]*?)<\/main>/i);
     return {
         title: titleMatch ? htmlToText(titleMatch[1]) : '',
-        text: htmlToText(mainMatch ? mainMatch[1] : html),
+        text: removeClutter(htmlToText(mainMatch ? mainMatch[1] : html)),
     };
+}
+
+// Buttons and labels from finn.no and arbeidsplassen.nav.no that are not part of the ad.
+// A line is removed if it starts with one of these.
+const CLUTTER_LINE_STARTS = [
+    'FINN Jobb', 'Legg til som favoritt', 'Del annonse', 'Del på', 'Kopier lenke',
+    'Fristen er utløpt', 'JobbMatch', 'Søk på jobben', 'Gå til søknad', 'Annonsedata',
+    'Rapporter annonse', 'Sist endret', 'Hentet fra', 'Referanse', 'Annonsenummer', '?%',
+];
+
+export function removeClutter(text) {
+    // Everything after "Lignende annonser" is a list of other jobs
+    const cut = text.indexOf('Lignende annonser');
+    if (cut !== -1) text = text.slice(0, cut);
+
+    return text
+        .split('\n')
+        .filter(line => !CLUTTER_LINE_STARTS.some(start => line.startsWith(start)))
+        .filter(line => !line.includes('god match for denne stillingen'))
+        .join('\n')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
 }
 
 // The JSON can be one object, a list, or an object with a "@graph" list
