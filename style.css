@@ -69,7 +69,19 @@ body {
     color: var(--ink);
 }
 
-.logo span {
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.logo-mark {
+    display: block;
+    width: 32px;
+    height: 32px;
+}
+
+.logo-accent {
     color: var(--accent-color);
 }
 
