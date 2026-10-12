@@ -252,78 +252,7 @@ textarea:focus {
     justify-content: flex-end;
 }
 
-/* ---------- Stillingsannonse: fetch from link ---------- */
-[hidden] {
-    display: none !important;
-}
-
-.url-fetch label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: var(--ink);
-}
-
-.url-row {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.url-row input {
-    flex: 1;
-    min-width: 0;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: 999px;
-    font-family: var(--font-family);
-    font-size: 1rem;  /* 16px stops iPhones from zooming in on focus */
-    color: var(--text-main);
-    background-color: var(--card-bg);
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.url-row input:focus {
-    outline: none;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 4px var(--accent-ring);
-}
-
-.secondary-btn {
-    background-color: var(--ink);
-    color: #ffffff;
-    border: none;
-    padding: 0.75rem 1.4rem;
-    border-radius: 999px;
-    font-family: var(--font-family);
-    font-size: 0.95rem;
-    font-weight: 600;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: opacity 0.2s, transform 0.1s;
-}
-
-/* Only on devices with a mouse: on touch screens a hover state can get stuck */
-@media (hover: hover) {
-    .secondary-btn:hover {
-        opacity: 0.85;
-    }
-}
-
-.secondary-btn:active {
-    transform: scale(0.98);
-}
-
-.secondary-btn:disabled {
-    opacity: 0.6;
-    cursor: wait;
-}
-
-.secondary-btn:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 4px var(--accent-ring);
-}
-
+/* ---------- Stillingsannonse: status line under the box ---------- */
 .fetch-status {
     min-height: 1.4em;
     margin-top: 0.5rem;
@@ -339,22 +268,14 @@ textarea:focus {
     color: var(--missing-text);
 }
 
-/* Line with text in the middle: ——— eller lim inn teksten ——— */
-.divider {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin: 0.75rem 0 1.25rem;
-    font-size: 0.8rem;
-    color: var(--text-muted);
+textarea[readonly] {
+    opacity: 0.6;
+    cursor: wait;
 }
 
-.divider::before,
-.divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background-color: var(--border-color);
+.primary-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
 }
 
 /* ---------- Søknad: editor + analysis side by side ---------- */
@@ -618,15 +539,5 @@ textarea:focus {
 
     .skills-container input {
         min-width: 120px;
-    }
-
-    /* Link field and button on separate lines */
-    .url-row {
-        flex-direction: column;
-    }
-
-    .secondary-btn {
-        width: 100%;
-        padding: 0.85rem;
     }
 }

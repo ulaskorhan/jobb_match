@@ -7,7 +7,7 @@ A small web app that helps job seekers compare their CV with a job ad. Paste a j
 ![Screenshot of jobbmatch](screenshot.png)
 
 ## How it works
-1. **Stillingsannonse:** paste a link to the ad from finn.no or arbeidsplassen.nav.no and click *Hent annonse*, or paste the ad text yourself. Then click *Analyser Annonse*.
+1. **Stillingsannonse:** paste the ad text, or a link to the ad from finn.no or arbeidsplassen.nav.no (the app then fetches the text for you). Then click *Analyser Annonse*.
 2. **CV & Profil:** add key skills as tags and paste your CV text. A meter shows how complete your profile is.
 3. **Søknad:** write your cover letter while the analysis panel shows a match score, keywords found and keywords you may be missing. After the first analysis, the result updates automatically when you change your CV text or skills.
 
@@ -18,7 +18,7 @@ The analysis runs entirely in the browser with plain JavaScript, and no data is 
 - Match score = keywords found ÷ total keywords.
 
 ## Fetching an ad from a link
-Browsers block one website from reading another website's page (CORS), so the link feature uses a small server function: a [Cloudflare Worker](worker/) (`worker/worker.js`). It fetches the job page, takes the job description, and returns it as plain text. For security it only fetches finn.no and arbeidsplassen.nav.no, and only this site may call it. The fetched text appears in the text box, so you can check it before analysing.
+Browsers block one website from reading another website's page (CORS), so the link feature uses a small server function: a [Cloudflare Worker](worker/) (`worker/worker.js`). It fetches the job page, takes the job description, and returns it as plain text. For security it only fetches finn.no and arbeidsplassen.nav.no, and only this site may call it. The fetched text replaces the link in the text box, so you can check it before analysing.
 
 ## Run it
 Open the live demo, or open `index.html` in a browser. Copy-paste works everywhere; the link feature needs the deployed worker.

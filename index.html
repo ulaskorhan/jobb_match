@@ -7,7 +7,7 @@
     <title>jobbmatch – Din assistent i jobbsøkingen</title>
     <meta name="theme-color" content="#0b1220">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=4">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -32,22 +32,11 @@
             <section id="job-ad" class="tab-content active">
                 <div class="card">
                     <h2>1. Stillingsannonse</h2>
-                    <p class="description">Lim inn teksten fra stillingsannonsen her. Vi analyserer den for å finne
-                        nøkkelord.</p>
-
-                    <!-- Fetch from link (hidden until FETCH_API_URL is set in script.js) -->
-                    <div class="url-fetch" id="url-fetch">
-                        <label for="job-url-input">Lenke til annonsen</label>
-                        <div class="url-row">
-                            <input type="url" id="job-url-input" placeholder="Lenke fra finn.no eller arbeidsplassen.nav.no"
-                                inputmode="url" autocomplete="off">
-                            <button id="fetch-btn" class="secondary-btn" type="button">Hent annonse</button>
-                        </div>
-                        <p id="fetch-status" class="fetch-status" role="status"></p>
-                        <div class="divider"><span>eller lim inn teksten</span></div>
-                    </div>
-
-                    <textarea id="job-description-input" placeholder="Lim inn stillingsannonse her..."></textarea>
+                    <p class="description">Lim inn teksten fra stillingsannonsen, eller en lenke fra finn.no eller
+                        arbeidsplassen.nav.no. Vi analyserer den for å finne nøkkelord.</p>
+                    <textarea id="job-description-input"
+                        placeholder="Lim inn annonseteksten eller en lenke her..."></textarea>
+                    <p id="fetch-status" class="fetch-status" role="status"></p>
                     <div class="actions">
                         <button id="analyze-btn" class="primary-btn">Analyser Annonse</button>
                     </div>
@@ -127,7 +116,7 @@
             </section>
         </main>
     </div>
-    <script src="script.js"></script>
+    <script src="script.js?v=4"></script>
 </body>
 
 </html>

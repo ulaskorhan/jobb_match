@@ -136,37 +136,35 @@ document.addEventListener('DOMContentLoaded', () => {
     let hasAnalysed = false;
 
     // --- Fetch job ad from a link ---
-    // Address of the Cloudflare Worker (see worker/worker.js).
-    // While it is empty, the link box is hidden and only copy-paste is used.
+    // The same box accepts the ad text or a link to the ad.
+    // If it contains only a link, the ad is fetched through our Cloudflare Worker
+    // (see worker/worker.js), because browsers block reading other sites directly (CORS).
     const FETCH_API_URL = 'https://jobbmatch.ulaskorhan.workers.dev/';
-
-    const urlSection = document.getElementById('url-fetch');
-    const urlInput = document.getElementById('job-url-input');
-    const fetchBtn = document.getElementById('fetch-btn');
     const fetchStatus = document.getElementById('fetch-status');
+    let isFetching = false;
 
-    if (!FETCH_API_URL) {
-        urlSection.hidden = true;
+    // Returns the link if the box contains only a link, otherwise null
+    function getLink(text) {
+        const trimmed = text.trim();
+        return FETCH_API_URL && /^https?:\/\/\S+$/.test(trimmed) ? trimmed : null;
     }
 
-    fetchBtn.addEventListener('click', fetchJobAd);
-    urlInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            fetchJobAd();
-        }
+    // Fetch right after a link is pasted.
+    // setTimeout waits until the pasted text is actually in the box.
+    jobInput.addEventListener('paste', () => {
+        setTimeout(() => {
+            const link = getLink(jobInput.value);
+            if (link) fetchJobAd(link);
+        }, 0);
     });
 
-    async function fetchJobAd() {
-        const link = urlInput.value.trim();
-        if (!link) {
-            showFetchStatus('Lim inn en lenke først.', 'error');
-            return;
-        }
-
-        fetchBtn.disabled = true;
-        fetchBtn.textContent = 'Henter...';
-        showFetchStatus('', '');
+    // Returns true if the ad was fetched, false if something went wrong
+    async function fetchJobAd(link) {
+        if (isFetching) return false;
+        isFetching = true;
+        jobInput.readOnly = true;
+        analyzeBtn.disabled = true;
+        showFetchStatus('Henter annonsen...', 'loading');
 
         try {
             // encodeURIComponent makes the link safe to put inside another URL
@@ -175,30 +173,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 showFetchStatus(data.error || 'Noe gikk galt. Lim inn teksten i stedet.', 'error');
-                return;
+                return false;
             }
 
-            // Put the text in the box so the user can check it before analysing
-            // Add the title on top, unless the text already starts with it
+            // Replace the link with the ad text, so the user can check it.
+            // Add the title on top, unless the text already starts with it.
             const addTitle = data.title && !data.text.startsWith(data.title);
             jobInput.value = addTitle ? `${data.title}\n\n${data.text}` : data.text;
             showFetchStatus('Annonsen er hentet. Sjekk teksten og trykk «Analyser Annonse».', 'success');
+            return true;
         } catch {
             showFetchStatus('Klarte ikke å hente annonsen. Lim inn teksten i stedet.', 'error');
+            return false;
         } finally {
             // Runs both after success and after an error
-            fetchBtn.disabled = false;
-            fetchBtn.textContent = 'Hent annonse';
+            isFetching = false;
+            jobInput.readOnly = false;
+            analyzeBtn.disabled = false;
         }
     }
 
-    // type is 'success', 'error' or '' (no colour)
+    // type is 'success', 'error', 'loading' or '' (no colour)
     function showFetchStatus(message, type) {
         fetchStatus.textContent = message;
         fetchStatus.className = type ? `fetch-status is-${type}` : 'fetch-status';
     }
 
-    analyzeBtn.addEventListener('click', () => {
+    analyzeBtn.addEventListener('click', async () => {
+        // If the box still holds a link (for example typed by hand), fetch it first
+        const link = getLink(jobInput.value);
+        if (link) {
+            const fetched = await fetchJobAd(link);
+            if (!fetched) return;
+        }
+
         if (jobInput.value.length < 50) {
             alert('Vennligst lim inn en lengre stillingsannonse for å analysere.');
             return;
