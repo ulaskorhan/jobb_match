@@ -34,6 +34,19 @@
                     <h2>1. Stillingsannonse</h2>
                     <p class="description">Lim inn teksten fra stillingsannonsen her. Vi analyserer den for å finne
                         nøkkelord.</p>
+
+                    <!-- Fetch from link (hidden until FETCH_API_URL is set in script.js) -->
+                    <div class="url-fetch" id="url-fetch">
+                        <label for="job-url-input">Lenke til annonsen</label>
+                        <div class="url-row">
+                            <input type="url" id="job-url-input" placeholder="Lenke fra finn.no eller arbeidsplassen.nav.no"
+                                inputmode="url" autocomplete="off">
+                            <button id="fetch-btn" class="secondary-btn" type="button">Hent annonse</button>
+                        </div>
+                        <p id="fetch-status" class="fetch-status" role="status"></p>
+                        <div class="divider"><span>eller lim inn teksten</span></div>
+                    </div>
+
                     <textarea id="job-description-input" placeholder="Lim inn stillingsannonse her..."></textarea>
                     <div class="actions">
                         <button id="analyze-btn" class="primary-btn">Analyser Annonse</button>

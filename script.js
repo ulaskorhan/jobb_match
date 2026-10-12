@@ -135,6 +135,69 @@ document.addEventListener('DOMContentLoaded', () => {
     // Becomes true after the first successful click on "Analyser Annonse"
     let hasAnalysed = false;
 
+    // --- Fetch job ad from a link ---
+    // Address of the Cloudflare Worker (see worker/worker.js).
+    // While it is empty, the link box is hidden and only copy-paste is used.
+    const FETCH_API_URL = '';
+
+    const urlSection = document.getElementById('url-fetch');
+    const urlInput = document.getElementById('job-url-input');
+    const fetchBtn = document.getElementById('fetch-btn');
+    const fetchStatus = document.getElementById('fetch-status');
+
+    if (!FETCH_API_URL) {
+        urlSection.hidden = true;
+    }
+
+    fetchBtn.addEventListener('click', fetchJobAd);
+    urlInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            fetchJobAd();
+        }
+    });
+
+    async function fetchJobAd() {
+        const link = urlInput.value.trim();
+        if (!link) {
+            showFetchStatus('Lim inn en lenke først.', 'error');
+            return;
+        }
+
+        fetchBtn.disabled = true;
+        fetchBtn.textContent = 'Henter...';
+        showFetchStatus('', '');
+
+        try {
+            // encodeURIComponent makes the link safe to put inside another URL
+            const response = await fetch(`${FETCH_API_URL}?url=${encodeURIComponent(link)}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                showFetchStatus(data.error || 'Noe gikk galt. Lim inn teksten i stedet.', 'error');
+                return;
+            }
+
+            // Put the text in the box so the user can check it before analysing
+            // Add the title on top, unless the text already starts with it
+            const addTitle = data.title && !data.text.startsWith(data.title);
+            jobInput.value = addTitle ? `${data.title}\n\n${data.text}` : data.text;
+            showFetchStatus('Annonsen er hentet. Sjekk teksten og trykk «Analyser Annonse».', 'success');
+        } catch {
+            showFetchStatus('Klarte ikke å hente annonsen. Lim inn teksten i stedet.', 'error');
+        } finally {
+            // Runs both after success and after an error
+            fetchBtn.disabled = false;
+            fetchBtn.textContent = 'Hent annonse';
+        }
+    }
+
+    // type is 'success', 'error' or '' (no colour)
+    function showFetchStatus(message, type) {
+        fetchStatus.textContent = message;
+        fetchStatus.className = type ? `fetch-status is-${type}` : 'fetch-status';
+    }
+
     analyzeBtn.addEventListener('click', () => {
         if (jobInput.value.length < 50) {
             alert('Vennligst lim inn en lengre stillingsannonse for å analysere.');
